@@ -1,19 +1,19 @@
 'use client';
 
 import React from 'react';
-import { Title } from './title';
-import { cn } from '@/lib/utils';
+import {Title} from './title';
+import {cn} from '@/lib/utils';
 import {ProductCard} from "@/components/shared/product-card";
 import {useIntersection} from "react-use";
 import {useCategoryStore} from "@/store/category";
+import {CategoryProducts} from "@/@types/prisma";
 
 interface Props {
     title: string;
-    products: any;
+    products: CategoryProducts['products'];
     className?: string;
     listClassName?: string;
     categoryId: number;
-    items: any
 }
 
 export const ProductsGroupList: React.FC<Props> = ({
@@ -22,7 +22,6 @@ export const ProductsGroupList: React.FC<Props> = ({
                                                        listClassName,
                                                        categoryId,
                                                        className,
-    items
                                                    }) => {
     const setActiveId = useCategoryStore((state) => state.setActiveId);
     const intersectionRef = React.useRef(null);
@@ -38,23 +37,19 @@ export const ProductsGroupList: React.FC<Props> = ({
 
     return (
         <div className={className} id={title} ref={intersectionRef}>
-            <Title text={title} size="lg" className="font-extrabold mb-5" />
+            <Title text={title} size="lg" className="font-extrabold mb-5"/>
             <div className={cn('grid grid-cols-3 gap-[50px]', listClassName)}>
-                {items
-                    //.filter((product) => product.items.length > 0)
-                    .map((product, i) => {
-
-                        console.log(product.products[0].imageUrl)
-                        return (
-                            <ProductCard
-                                key={product.id}
-                                id={product.id}
-                                name={product.name}
-                                imageUrl={product.products[0].imageUrl}
-                                price={product.products[0].items[0].price}
-                            />
-                        )
-                    })}
+                {products
+                    .filter((product) => product.items.length > 0)
+                    .map((product, i) => (
+                        <ProductCard
+                            key={product.id}
+                            id={product.id}
+                            name={product.name}
+                            imageUrl={product.imageUrl}
+                            price={product.items[0].price}
+                        />
+                    ))}
             </div>
         </div>
     );

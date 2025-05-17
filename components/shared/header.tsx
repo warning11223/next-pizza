@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {Button} from "@/components/ui";
 import {ArrowRight, ShoppingCart} from "lucide-react";
+import {SearchInput} from "@/components/shared/search-input";
 
 interface Props {
     className?: string;
@@ -25,6 +26,10 @@ export const Header: FC<Props> = ({className}) => {
                         </div>
                     </div>
                 </Link>
+
+                <div className="mx-10 flex-1">
+                    <SearchInput />
+                </div>
 
                 <Button className={cn('group relative', className)}>
                     <b>{0} ₽</b>
