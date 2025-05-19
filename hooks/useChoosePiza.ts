@@ -10,13 +10,13 @@ import {
     pizzaDetailsToText,
     pizzaSizes,
 } from '@/lib/pizza-details-to-text';
-//import { useCart } from './use-cart';
+import {useCart} from "@/hooks/useCart";
 
 export type IProduct = Product & { items: ProductItem[]; ingredients: Ingredient[] };
 
 export const useChoosePizza = (items?: IProduct['items']) => {
     const [selectedIngredientsIds, { toggle: toggleAddIngredient }] = useSet<number>(new Set([]));
-    //const { addCartItem, loading } = useCart();
+    const { addCartItem, loading } = useCart();
 
     const [size, setSize] = React.useState<PizzaSize>(20);
     const [type, setType] = React.useState<PizzaType>(1);
@@ -43,21 +43,21 @@ export const useChoosePizza = (items?: IProduct['items']) => {
     }, [type]);
 
     const addPizza = async () => {
-        // if (productItem) {
-        //     try {
-        //         await addCartItem({
-        //             productItemId: productItem?.id,
-        //             pizzaSize: size,
-        //             type,
-        //             ingredientsIds: Array.from(selectedIngredientsIds),
-        //             quantity: 1,
-        //         });
-        //         toast.success('Товар добавлен в корзину');
-        //     } catch (error) {
-        //         console.error(error);
-        //         toast.error('Произошла ошибка при добавлении в корзину');
-        //     }
-        // }
+        if (productItem) {
+            try {
+                addCartItem({
+                    productItemId: productItem?.id,
+                    pizzaSize: size,
+                    type,
+                    ingredientsIds: Array.from(selectedIngredientsIds),
+                    quantity: 1,
+                });
+                toast.success('Товар добавлен в корзину');
+            } catch (error) {
+                console.error(error);
+                toast.error('Произошла ошибка при добавлении в корзину');
+            }
+        }
     };
 
     const setPizzaSize = (value: number | string) => {
@@ -81,7 +81,7 @@ export const useChoosePizza = (items?: IProduct['items']) => {
         isActiveSize,
         textDetaills,
         isSelectedIngredient,
-        //loading,
+        loading,
         size,
         type,
         addPizza,

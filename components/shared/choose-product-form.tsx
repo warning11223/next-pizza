@@ -3,28 +3,27 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { Button } from '../ui/button';
-import { Title } from './title';
 import { IProduct } from '@/hooks/useChoosePiza';
 import toast from 'react-hot-toast';
 import {DialogTitle} from "@/components/ui/dialog";
-//import { useCart } from '@/hooks/use-cart';
+import {useCart} from "@/hooks/useCart";
 
 interface Props {
     imageUrl: string;
     name: string;
     className?: string;
     items?: IProduct['items'];
-    onClickAdd?: VoidFunction;
+    onCloseModal?: VoidFunction;
 }
 
 export const ChooseProductForm: React.FC<Props> = ({
                                                        name,
                                                        items,
                                                        imageUrl,
-                                                       onClickAdd,
+                                                       onCloseModal,
                                                        className,
                                                    }) => {
-    //const { addCartItem, loading } = useCart();
+    const { addCartItem, loading } = useCart();
 
     const productItem = items?.[0];
 
@@ -35,18 +34,18 @@ export const ChooseProductForm: React.FC<Props> = ({
     const productPrice = productItem.price;
 
     const handleClickAdd = async () => {
-        // try {
-        //     await addCartItem({
-        //         productItemId: productItem.id,
-        //         quantity: 1,
-        //     });
-        //     toast.success('Товар добавлен в корзину');
-        // } catch (error) {
-        //     console.error(error);
-        //     toast.error('Произошла ошибка при добавлении в корзину');
-        // }
-        //
-        // onClickAdd?.();
+        try {
+            addCartItem({
+                productItemId: productItem.id,
+                quantity: 1,
+            });
+            toast.success('Товар добавлен в корзину');
+        } catch (error) {
+            console.error(error);
+            toast.error('Произошла ошибка при добавлении в корзину');
+        }
+
+        onCloseModal?.();
     };
 
     return (
@@ -59,11 +58,11 @@ export const ChooseProductForm: React.FC<Props> = ({
                 />
             </div>
 
-            <div className="w-[490px] bg-[#FCFCFC] p-7">
+            <div className="flex flex-col justify-between w-[490px] bg-[#F7F6F5] p-7">
                 <DialogTitle className="font-extrabold mb-1 text-3xl">{name}</DialogTitle>
 
                 <Button
-                    //loading={loading}
+                    loading={loading}
                     onClick={handleClickAdd}
                     className="h-[55px] px-10 text-base rounded-[18px] w-full mt-5">
                     Добавить в корзину за {productPrice} ₽

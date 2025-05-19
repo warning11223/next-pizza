@@ -2,13 +2,10 @@
 
 import React from 'react';
 import {Dialog, DialogContent} from '@/components/ui/dialog';
-//import { ChoosePizzaForm } from '../choose-pizza-form';
-//import { IProduct } from '@/hooks/use-choose-pizza';
 import { useRouter } from 'next/navigation';
 import {ChoosePizzaForm} from "@/components/shared/choose-pizza-form";
 import {ChooseProductForm} from "@/components/shared";
 import {IProduct} from "@/hooks/useChoosePiza";
-//import { ChooseProductForm } from '../choose-product-form';
 
 interface Props {
     product: IProduct;
@@ -31,7 +28,7 @@ export const ChooseProductModal: React.FC<Props> = ({ product }) => {
                         imageUrl={product.imageUrl}
                         name={product.name}
                         items={product.items}
-                        onClickAdd={onCloseModal}
+                        onCloseModal={onCloseModal}
                         ingredients={product.ingredients}
                     />
                 ) : (
@@ -39,7 +36,7 @@ export const ChooseProductModal: React.FC<Props> = ({ product }) => {
                         imageUrl={product.imageUrl}
                         name={product.name}
                         items={product.items}
-                        onClickAdd={onCloseModal}
+                        onCloseModal={onCloseModal}
                     />
                 )}
             </DialogContent>

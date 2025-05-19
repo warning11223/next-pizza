@@ -1,17 +1,20 @@
+import {getCategories} from "@/lib/get-categories";
 import {Container, Filters, ProductsGroupList, Title, TopBar} from "@/components/shared";
-import prisma from "@/prisma/prisma-client";
 
-export default async function Home() {
-    const categories = await prisma.category.findMany({
-        include: {
-            products: {
-                include: {
-                    items: true,
-                    ingredients: true
-                }
-            }
-        }
-    })
+export interface GetSearchParams {
+    query?: string;
+    sortBy?: string;
+    sizes?: string;
+    pizzaTypes?: string;
+    ingredients?: string;
+    priceFrom?: string;
+    priceTo?: string;
+    limit?: string;
+    page?: string;
+}
+
+export default async function Home({ searchParams }: { searchParams: GetSearchParams }) {
+    const categories = await getCategories(searchParams);
 
     return (
         <h1>

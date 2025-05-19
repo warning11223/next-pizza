@@ -1,17 +1,15 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import {cn} from '@/lib/utils';
 import React from 'react';
-import { PizzaImage } from './pizza-image';
-//import { IngredientsList } from './ingredients-list';
-import { Button } from '../ui/button';
-import { Title } from './title';
-//import { PizzaSelector } from './pizza-selector';
-import { IProduct, useChoosePizza } from '@/hooks/useChoosePiza';
+import {PizzaImage} from './pizza-image';
+import {Button} from '../ui/button';
+import {IProduct, useChoosePizza} from '@/hooks/useChoosePiza';
 import toast from 'react-hot-toast';
 import {DialogTitle} from "@/components/ui/dialog";
 import {PizzaSelector} from "@/components/shared/pizza-selector";
 import {IngredientsList} from "@/components/shared/ingredient-list";
+import {Title} from "@/components/shared/title";
 
 interface Props {
     imageUrl: string;
@@ -19,7 +17,7 @@ interface Props {
     className?: string;
     ingredients: IProduct['ingredients'];
     items?: IProduct['items'];
-    onClickAdd?: VoidFunction;
+    onCloseModal?: VoidFunction;
 }
 
 export const ChoosePizzaForm: React.FC<Props> = ({
@@ -27,7 +25,7 @@ export const ChoosePizzaForm: React.FC<Props> = ({
                                                      items,
                                                      imageUrl,
                                                      ingredients,
-                                                     onClickAdd,
+                                                     onCloseModal,
                                                      className,
                                                  }) => {
     const {
@@ -53,8 +51,7 @@ export const ChoosePizzaForm: React.FC<Props> = ({
 
     const handleClickAdd = async () => {
         try {
-            await addPizza();
-            onClickAdd?.();
+            await addPizza().then(() => onCloseModal?.());
         } catch (error) {
             toast.error('Произошла ошибка при добавлении в корзину');
             console.error(error);
@@ -63,10 +60,10 @@ export const ChoosePizzaForm: React.FC<Props> = ({
 
     return (
         <div className={cn(className, 'flex flex-1')}>
-                <PizzaImage imageUrl={imageUrl} size={size} />
+            <PizzaImage imageUrl={imageUrl} size={size}/>
 
-            <div className="w-[490px] bg-[#FCFCFC] p-7">
-                <DialogTitle className="font-extrabold mb-1 text-3xl" >{name}</DialogTitle>
+            <div className="w-[490px] bg-[#F7F6F5] p-7">
+                <Title text={name} size="md" className="font-extrabold mb-1" />
 
                 <p className="text-gray-400">{textDetaills}</p>
 
@@ -89,7 +86,7 @@ export const ChoosePizzaForm: React.FC<Props> = ({
                 <Button
                     loading={loading}
                     onClick={handleClickAdd}
-                    className="h-[55px] px-10 text-base rounded-[18px] w-full">
+                    className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10">
                     Добавить в корзину за {totalPrice} ₽
                 </Button>
             </div>
