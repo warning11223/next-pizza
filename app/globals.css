@@ -7,6 +7,20 @@
   font-family: var(--font-nunito), sans-serif;
 }
 
+.react-dadata__input{
+  &:focus {
+    border: 1px solid #6b6b6b !important;
+    outline: none !important;
+  }
+}
+
+input {
+  &:focus {
+    outline: none;
+    border: none !important;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }

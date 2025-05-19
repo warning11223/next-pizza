@@ -3,8 +3,7 @@ import { cn } from '@/lib/utils';
 import { CartItemProps } from './cart-item-details/cart-item-details.types';
 import { ICartItem } from '@/store/cart';
 import { Trash2Icon } from 'lucide-react';
-import { CartItemDetailsImage } from '@/components/shared/cart-item-details';
-import {CartItemDetailsPrice, CartItemInfo} from "@/components/shared/cart-item-details";
+import * as CartItemDetails from './cart-item-details';
 import {CountButton} from "@/components/shared/count-button";
 import {useCart} from "@/hooks/useCart";
 import toast from "react-hot-toast";
@@ -45,10 +44,10 @@ export const DrawerCartItem: React.FC<Props> = ({
             'flex bg-white p-5 gap-6 transition-all',
             {'opacity-50 bg-orange-100 pointer-events-none': loading},
             className)}>
-            <CartItemDetailsImage src={imageUrl} />
+            <CartItemDetails.Image src={imageUrl} />
 
             <div className="flex-1">
-                <CartItemInfo name={name} ingredients={ingredients} pizzaSize={pizzaSize} type={type} />
+                <CartItemDetails.Info name={name} ingredients={ingredients} pizzaSize={pizzaSize} type={type} />
 
                 <hr className="my-3" />
 
@@ -56,7 +55,7 @@ export const DrawerCartItem: React.FC<Props> = ({
                     <CountButton onClick={onClickCountButton} value={quantity} />
 
                     <div className="flex items-center gap-3">
-                        <CartItemDetailsPrice value={price} />
+                        <CartItemDetails.Price value={price} />
                         <Trash2Icon
                             onClick={() => onRemoveCartItem(id)}
                             className="text-gray-400 cursor-pointer hover:text-gray-600"

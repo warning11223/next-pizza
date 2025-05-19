@@ -10,9 +10,11 @@ import {SearchInput} from "@/components/shared/search-input";
 
 interface Props {
     className?: string;
+    hasCart?: boolean;
+    hasSearch?: boolean;
 }
 
-export const Header: FC<Props> = ({className}) => {
+export const Header: FC<Props> = ({className, hasSearch = true, hasCart = true}) => {
 
     return (
         <header className={cn('border border-b border-gray-100', className)}>
@@ -27,11 +29,15 @@ export const Header: FC<Props> = ({className}) => {
                     </div>
                 </Link>
 
-                <div className="mx-10 flex-1">
-                    <SearchInput />
-                </div>
+                {hasSearch && (
+                    <div className="mx-10 flex-1">
+                        <SearchInput />
+                    </div>
+                )}
 
-                <CartButton />
+                {hasCart && (
+                    <CartButton />
+                )}
             </Container>
         </header>
     );

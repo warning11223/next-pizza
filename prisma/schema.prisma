@@ -116,19 +116,21 @@ model CartItem {
 model Order {
   id Int @id @default(autoincrement())
 
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  user   User? @relation(fields: [userId], references: [id])
+  userId Int?
 
-  items Json?
+  token String
 
-  status      OrderStatus @default(PENDING)
   totalAmount Int
+  status      OrderStatus
   paymentId   String?
 
+  items Json
+
   fullName String
-  address  String
   email    String
   phone    String
+  address  String
   comment  String?
 
   createdAt DateTime @default(now())
