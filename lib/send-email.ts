@@ -12,6 +12,8 @@ export const sendEmail = async (
         from: 'onboarding@resend.dev',
         to,
         subject,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         react: template,
     });
 

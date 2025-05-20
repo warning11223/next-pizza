@@ -6,6 +6,7 @@ import {OrderStatus} from "@prisma/client";
 import {TFormOrderData} from "@/components/shared";
 import {sendEmail} from "@/lib/send-email";
 import {PayOrderTemplate} from "@/components/shared/email-templates/pay-order";
+import {createPayment} from "@/lib/create-payment";
 
 // Создать заказ
 export async function createOrder(data: TFormOrderData) {
@@ -78,26 +79,26 @@ export async function createOrder(data: TFormOrderData) {
             },
         });
 
-        // const paymentData = await createPayment({
-        //     amount: order.totalAmount,
-        //     orderId: order.id,
-        //     description: 'Оплата заказа #' + order.id,
-        // });
+        const paymentData = await createPayment({
+            amount: order.totalAmount,
+            orderId: order.id,
+            description: 'Оплата заказа #' + order.id,
+        });
 
-        // if (!paymentData) {
-        //     throw new Error('Payment data not found');
-        // }
+        if (!paymentData) {
+            throw new Error('Payment data not found');
+        }
 
-        // await prisma.order.update({
-        //     where: {
-        //         id: order.id,
-        //     },
-        //     data: {
-        //         paymentId: paymentData.id,
-        //     },
-        // });
+        await prisma.order.update({
+            where: {
+                id: order.id,
+            },
+            data: {
+                paymentId: paymentData.id,
+            },
+        });
 
-        const paymentUrl = 'test url';
+        const paymentUrl = paymentData.confirmation.confirmation_url;
 
         await sendEmail(
             data.email,

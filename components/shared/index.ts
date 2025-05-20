@@ -28,5 +28,7 @@ export {ClearButton} from "./clear-button"
 export {ErrorText} from "./error-text"
 export {FormInput} from "./form/form-input"
 export {CartSidebarDetails} from "./cart-sidebar-details"
+export {AuthModal} from "./modals/auth-modal/auth-modal"
+export {ProfileButton} from "./profile-button"
 
 export * from "./schemas/order-form-schema"

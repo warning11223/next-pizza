@@ -1,12 +1,16 @@
 'use client';
 
-import {FC} from "react";
+import {FC, useEffect, useState} from "react";
 import Link from "next/link";
 import {cn} from "@/lib/utils";
 import Image from "next/image";
 import {Container} from "@/components/shared/container";
 import {CartButton} from "@/components/shared/cart-button";
 import {SearchInput} from "@/components/shared/search-input";
+import {useRouter, useSearchParams} from "next/navigation";
+import toast from "react-hot-toast";
+import {AuthModal} from "@/components/shared/modals/auth-modal/auth-modal";
+import {ProfileButton} from "@/components/shared/profile-button";
 
 interface Props {
     className?: string;
@@ -15,6 +19,27 @@ interface Props {
 }
 
 export const Header: FC<Props> = ({className, hasSearch = true, hasCart = true}) => {
+    const [openAuthModal, setOpenAuthModal] = useState(false);
+
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    useEffect(() => {
+        let toastMessage = '';
+
+        if (searchParams.has('paid')) {
+            toastMessage = 'Заказ успешно оплачен! Информация отправлена на почту.';
+        }
+
+        if (toastMessage) {
+            setTimeout(() => {
+                router.replace('/');
+                toast.success(toastMessage, {
+                    duration: 3000,
+                });
+            }, 500);
+        }
+    }, []);
 
     return (
         <header className={cn('border border-b border-gray-100', className)}>
@@ -35,9 +60,18 @@ export const Header: FC<Props> = ({className, hasSearch = true, hasCart = true})
                     </div>
                 )}
 
-                {hasCart && (
-                    <CartButton />
-                )}
+                <div className="flex items-center gap-3">
+                    <AuthModal
+                        open={openAuthModal}
+                        onClose={() => setOpenAuthModal(false)}
+                    />
+
+                    <ProfileButton
+                        onClickOpenModal={() => setOpenAuthModal(true)}
+                    />
+
+                    {hasCart && <CartButton />}
+                </div>
             </Container>
         </header>
     );
