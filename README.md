@@ -20,6 +20,7 @@
 - react-insta-stories
 - lucide-react
 - Resend
+- ЮKassa 
 
 
 ## Установка и запуск
