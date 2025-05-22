@@ -4,10 +4,10 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-//import { registerUser } from '@/app/actions';
 import { TFormRegisterValues, formRegisterSchema } from './schemas';
 import { FormInput } from '../../../form';
 import {Button} from "@/components/ui";
+import {registerUser} from "@/app/actions";
 
 interface Props {
     onClose?: VoidFunction;
@@ -27,11 +27,11 @@ export const RegisterForm: React.FC<Props> = ({ onClose, onClickLogin }) => {
 
     const onSubmit = async (data: TFormRegisterValues) => {
         try {
-            // await registerUser({
-            //     email: data.email,
-            //     fullName: data.fullName,
-            //     password: data.password,
-            // });
+            await registerUser({
+                email: data.email,
+                fullName: data.fullName,
+                password: data.password
+            });
 
             toast.error('Регистрация успешна 📝. Подтвердите свою почту', {
                 icon: '✅',
@@ -39,7 +39,7 @@ export const RegisterForm: React.FC<Props> = ({ onClose, onClickLogin }) => {
 
             onClose?.();
         } catch (error) {
-            return toast.error('Неверный E-Mail или пароль', {
+            return toast.error('Ошибка', {
                 icon: '❌',
             });
         }

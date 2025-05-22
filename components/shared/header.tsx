@@ -31,6 +31,10 @@ export const Header: FC<Props> = ({className, hasSearch = true, hasCart = true})
             toastMessage = 'Заказ успешно оплачен! Информация отправлена на почту.';
         }
 
+        if (searchParams.has('verified')) {
+            toastMessage = 'Почта успешно подтверждена!';
+        }
+
         if (toastMessage) {
             setTimeout(() => {
                 router.replace('/');

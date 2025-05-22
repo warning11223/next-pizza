@@ -30,5 +30,7 @@ export {FormInput} from "./form/form-input"
 export {CartSidebarDetails} from "./cart-sidebar-details"
 export {AuthModal} from "./modals/auth-modal/auth-modal"
 export {ProfileButton} from "./profile-button"
+export {ProfileForm} from "./profile-form"
+export {InfoBlock} from "./info-block"
 
 export * from "./schemas/order-form-schema"
