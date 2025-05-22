@@ -11,7 +11,6 @@ import {
     WhiteBlock
 } from '@/components/shared';
 import { useCart } from '@/hooks/useCart';
-import { Trash2 } from 'lucide-react';
 import React from "react";
 import {Controller, FormProvider, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -90,7 +89,7 @@ export default function CartPage() {
 
     return (
         <Container className="mt-5">
-            <Title text="Оформление заказа" size="xl" className="font-extrabold mb-8" />
+            <Title text="Оформление заказа" size="xl" className="font-extrabold mb-8"/>
 
             <FormProvider {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -98,20 +97,21 @@ export default function CartPage() {
                         <div className="flex flex-col gap-10 flex-1 mb-20">
                             <WhiteBlock
                                 title="1. Корзина"
-                                endAdornment={
-                                    totalAmount > 0 && (
-                                        <button
-                                            type="button"
-                                            className="flex items-center gap-3 text-gray-400 hover:text-gray-600"
-                                        >
-                                            <Trash2 size={16} />
-                                            Очистить корзину
-                                        </button>
-                                    )
-                                }>
+                                // endAdornment={
+                                //     totalAmount > 0 && (
+                                //         <button
+                                //             type="button"
+                                //             className="flex items-center gap-3 text-gray-400 hover:text-gray-600"
+                                //         >
+                                //             <Trash2 size={16}/>
+                                //             Очистить корзину
+                                //         </button>
+                                //     )
+                                // }
+                            >
                                 <div className="flex flex-col gap-5">
                                     {loading
-                                        ? [...Array(3)].map((_, index) => <CartItemSkeleton key={index} />)
+                                        ? [...Array(3)].map((_, index) => <CartItemSkeleton key={index}/>)
                                         : items.map((item) => (
                                             <CartItem
                                                 key={item.id}

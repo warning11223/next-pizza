@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Suspense} from "react";
 import {Header} from "@/components/shared";
 
 
@@ -11,7 +11,9 @@ export default function RootLayout({
 }>) {
     return (
         <main className="min-h-screen">
-            <Header/>
+            <Suspense>
+                <Header />
+            </Suspense>
             {children}
             {modal}
         </main>

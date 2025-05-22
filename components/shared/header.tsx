@@ -5,7 +5,6 @@ import Link from "next/link";
 import {cn} from "@/lib/utils";
 import Image from "next/image";
 import {Container} from "@/components/shared/container";
-import {CartButton} from "@/components/shared/cart-button";
 import {SearchInput} from "@/components/shared/search-input";
 import {useRouter, useSearchParams} from "next/navigation";
 import toast from "react-hot-toast";
@@ -18,7 +17,7 @@ interface Props {
     hasSearch?: boolean;
 }
 
-export const Header: FC<Props> = ({className, hasSearch = true, hasCart = true}) => {
+export const Header: FC<Props> = ({className, hasSearch = true}) => {
     const [openAuthModal, setOpenAuthModal] = useState(false);
 
     const searchParams = useSearchParams();
@@ -74,7 +73,7 @@ export const Header: FC<Props> = ({className, hasSearch = true, hasCart = true})
                         onClickOpenModal={() => setOpenAuthModal(true)}
                     />
 
-                    {hasCart && <CartButton />}
+                    {/*{hasCart && <CartButton />}*/}
                 </div>
             </Container>
         </header>

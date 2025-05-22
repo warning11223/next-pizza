@@ -1,5 +1,5 @@
 import {getCategories} from "@/lib/get-categories";
-import {Container, Filters, ProductsGroupList, Title, TopBar} from "@/components/shared";
+import {Container, Filters, ProductsGroupList, Stories, Title, TopBar} from "@/components/shared";
 
 export interface GetSearchParams {
     query?: string;
@@ -24,6 +24,8 @@ export default async function Home({ searchParams }: { searchParams: GetSearchPa
 
             <TopBar items={categories.filter(category => category.products.length > 0)}/>
 
+            <Stories />
+
             <Container className="pb-14">
                 <div className="flex gap-[60px]">
                     <div className="w-[250px]">
@@ -43,11 +45,6 @@ export default async function Home({ searchParams }: { searchParams: GetSearchPa
                                     ),
                             )}
                         </div>
-
-                        {/*<div className="flex items-center gap-6 mt-12">
-                          <Pagination pageCount={meta.pageCount} currentPage={meta.currentPage} />
-                          <span className="text-sm text-gray-400">5 из 65</span>
-                      </div>*/}
                     </div>
                 </div>
             </Container>
