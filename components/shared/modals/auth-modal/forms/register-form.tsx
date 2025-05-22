@@ -11,10 +11,9 @@ import {registerUser} from "@/app/actions";
 
 interface Props {
     onClose?: VoidFunction;
-    onClickLogin?: VoidFunction;
 }
 
-export const RegisterForm: React.FC<Props> = ({ onClose, onClickLogin }) => {
+export const RegisterForm: React.FC<Props> = ({ onClose }) => {
     const form = useForm<TFormRegisterValues>({
         resolver: zodResolver(formRegisterSchema),
         defaultValues: {
@@ -39,6 +38,7 @@ export const RegisterForm: React.FC<Props> = ({ onClose, onClickLogin }) => {
 
             onClose?.();
         } catch (error) {
+            console.log(error)
             return toast.error('Ошибка', {
                 icon: '❌',
             });

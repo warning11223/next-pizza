@@ -16,10 +16,6 @@ interface Props {
 }
 
 export const ProductCard: React.FC<Props> = ({id, name, price, imageUrl, className, ingredients}) => {
-    const onAddProduct = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-    }
-
     const ingredientsString = ingredients?.map(ingredient => ingredient.name).join(', ')
 
     return (
@@ -44,7 +40,6 @@ export const ProductCard: React.FC<Props> = ({id, name, price, imageUrl, classNa
                     <Button
                         variant="secondary"
                         className="text-base font-bold"
-                        onClick={onAddProduct}
                     >
                         <Plus className="w-5 h-5 mr-1"/>
                         Добавить

@@ -1,6 +1,6 @@
-import { PizzaSize } from '@/hooks/useChoosePiza';
 import { cn } from '@/lib/utils';
 import React from 'react';
+import {PizzaSize} from "@/lib/pizza-details-to-text";
 
 interface Props {
     className?: string;

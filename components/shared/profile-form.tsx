@@ -40,6 +40,7 @@ export const ProfileForm: FC<Props> = ({ data }) => {
                 icon: '✅',
             });
         } catch (error) {
+            console.log(error)
             return toast.error('Ошибка при обновлении данных', {
                 icon: '❌',
             });

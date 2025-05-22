@@ -1,5 +1,6 @@
 import {getCategories} from "@/lib/get-categories";
 import {Container, Filters, ProductsGroupList, Stories, Title, TopBar} from "@/components/shared";
+import {ProductWithRelations} from "@/@types/prisma";
 
 export interface GetSearchParams {
     query?: string;
@@ -13,7 +14,9 @@ export interface GetSearchParams {
     page?: string;
 }
 
-export default async function Home({ searchParams }: { searchParams: GetSearchParams }) {
+type Params = Promise<{ slug: string[] }> & GetSearchParams;
+
+export default async function Home({ searchParams }: { searchParams: Params }) {
     const categories = await getCategories(searchParams);
 
     return (
@@ -39,8 +42,8 @@ export default async function Home({ searchParams }: { searchParams: GetSearchPa
                                         <ProductsGroupList
                                             key={category.id}
                                             title={category.name}
-                                            products={category.products}
                                             categoryId={category.id}
+                                            items={category.products as ProductWithRelations[]}
                                         />
                                     ),
                             )}

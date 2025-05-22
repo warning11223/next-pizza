@@ -2,7 +2,9 @@ import { calcCartItemTotalAmount } from "@/lib/calc-cart-item-total-amount";
 import prisma from "@/prisma/prisma-client";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+type Params = Promise<{ slug: string[] }> & { id: string };
+
+export async function PATCH(req: NextRequest, { params }: { params: Params }) {
     try {
         const cartToken = req.cookies.get('cartToken')?.value;
         //const currentUser = await getUserSession();
@@ -71,7 +73,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Params}) {
     try {
         const cartToken = req.cookies.get('cartToken')?.value;
         //const currentUser = await getUserSession();

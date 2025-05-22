@@ -6,7 +6,6 @@ import {PizzaImage} from './pizza-image';
 import {Button} from '../ui/button';
 import {IProduct, useChoosePizza} from '@/hooks/useChoosePiza';
 import toast from 'react-hot-toast';
-import {DialogTitle} from "@/components/ui/dialog";
 import {PizzaSelector} from "@/components/shared/pizza-selector";
 import {IngredientsList} from "@/components/shared/ingredient-list";
 import {Title} from "@/components/shared/title";
