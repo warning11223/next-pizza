@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import {PizzaSelector} from "@/components/shared/pizza-selector";
 import {IngredientsList} from "@/components/shared/ingredient-list";
 import {Title} from "@/components/shared/title";
+import {calcTotalPizzaPrice} from "@/lib/calc-total-pizza-price";
 
 interface Props {
     imageUrl: string;
@@ -40,13 +41,7 @@ export const ChoosePizzaForm: React.FC<Props> = ({
         toggleAddIngredient,
     } = useChoosePizza(items);
 
-    const totalIngredientPrice: number =
-        ingredients
-            ?.filter((ingredient) => selectedIngredientsIds.has(ingredient.id))
-            ?.reduce((acc, item) => acc + item.price, 0) || 0;
-
-    const pizzaPrice: number = items?.find((item) => item.pizzaType === type)?.price || 0;
-    const totalPrice: number = totalIngredientPrice + pizzaPrice;
+    const totalPrice = calcTotalPizzaPrice(type, size, items, ingredients, selectedIngredientsIds);
 
     const handleClickAdd = async () => {
         try {
