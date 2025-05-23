@@ -20,6 +20,7 @@ import {createOrder} from "@/app/actions";
 import toast from "react-hot-toast";
 import {useSession} from "next-auth/react";
 import {Api} from "@/services/api-client";
+import {Ingredient} from "@prisma/client";
 
 const VAT = 15;
 const DELIVERY_PRICE = 250;
@@ -118,6 +119,7 @@ export default function CartPage() {
                                                 name={item.name}
                                                 imageUrl={item.imageUrl}
                                                 price={item.price}
+                                                ingredients={item.ingredients as Ingredient[]}
                                                 quantity={item.quantity}
                                                 onClickRemove={() => removeCartItem(item.id)}
                                                 onClickCountButton={(type) =>

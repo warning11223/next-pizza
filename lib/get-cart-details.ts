@@ -8,6 +8,14 @@ type ReturnProps = {
 };
 
 export const getCartDetails = (data: CartResponse): ReturnProps => {
+    if (!data) {
+        return { items: [], totalAmount: 0 };
+    }
+
+    if (!data.items || !Array.isArray(data.items)) {
+        return { items: [], totalAmount: data.totalAmount || 0 };
+    }
+
     const items = data.items.map((item) => ({
         id: item.id,
         quantity: item.quantity,

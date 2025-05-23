@@ -6,10 +6,12 @@ import { X } from 'lucide-react';
 import { CartItemProps } from './cart-item-details/cart-item-details.types';
 import * as CartItemDetails from './cart-item-details';
 import { CountButtonProps } from './count-button';
+import {Ingredient} from "@prisma/client";
 
 interface Props extends CartItemProps {
     onClickRemove: () => void;
     onClickCountButton: CountButtonProps['onClick'];
+    ingredients?: Ingredient[]
 }
 
 export const CartItem: React.FC<Props> = ({
@@ -20,12 +22,13 @@ export const CartItem: React.FC<Props> = ({
                                               className,
                                               onClickCountButton,
                                               onClickRemove,
+                                              ingredients
                                           }) => {
     return (
         <div className={cn('flex items-center justify-between', className)}>
             <div className="flex items-center gap-5 flex-1">
                 <CartItemDetails.Image src={imageUrl} />
-                <CartItemDetails.Info name={name} />
+                <CartItemDetails.Info name={name} ingredients={ingredients} />
             </div>
 
             <CartItemDetails.Price value={price} />

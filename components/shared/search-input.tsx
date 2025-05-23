@@ -28,7 +28,6 @@ export const SearchInput = () => {
     );
 
     const onClickItem = () => {
-        setProducts([]);
         setSearchQuery('');
         setFocused(false);
     };

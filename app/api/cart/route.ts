@@ -2,7 +2,7 @@ import {NextRequest, NextResponse} from "next/server";
 import prisma from "@/prisma/prisma-client";
 import crypto from "crypto";
 import {CreateCartItemValues} from "@/services/dto/cart";
-import {calcCartItemTotalAmount} from "@/lib/calc-cart-item-total-amount";
+import {updateCartTotalAmount} from "@/lib/update-cart-total-amount";
 
 export async function GET(req: NextRequest) {
     try {
@@ -49,67 +49,98 @@ export async function GET(req: NextRequest) {
     }
 }
 
+
 export async function POST(req: NextRequest) {
     try {
-        //const currentUser = await getUserSession();
-        //const userId = Number(currentUser?.id);
-        let cartToken = req.cookies.get('cartToken')?.value;
+        let token = req.cookies.get('cartToken')?.value;
+
+        if (!token) {
+            token = crypto.randomUUID();
+        }
+
+        const userCart = await findOrCreateCart(token);
 
         const data = (await req.json()) as CreateCartItemValues;
 
-        if (!cartToken) {
-            cartToken = crypto.randomUUID();
-        }
+        // Проверяем наличие ингредиентов
+        const ingredientIds = data.ingredientsIds || [];
 
-        const userCart = await findOrCreateCart(cartToken);
-
-        const findCartItem = await prisma.cartItem.findFirst({
+        // Находим все похожие элементы корзины (с тем же продуктом, размером и типом)
+        const similarCartItems = await prisma.cartItem.findMany({
             where: {
                 cartId: userCart.id,
                 productItemId: data.productItemId,
-                ingredients: {
-                    every: {
-                        id: { in: data.ingredients },
-                    },
-                },
+                pizzaSize: data.pizzaSize,
+                type: data.type,
             },
+            include: {
+                ingredients: true
+            }
         });
 
-        // Если товар был найден, делаем +1
-        if (findCartItem) {
-            const updatedCartItem = await prisma.cartItem.update({
+        let exactMatch = null;
+
+        for (const item of similarCartItems) {
+            const itemIngredientIds = item.ingredients.map(ing => ing.id);
+
+            const sameLength = itemIngredientIds.length === ingredientIds.length;
+
+            const allIngredientsMatch = ingredientIds.every(id =>
+                itemIngredientIds.includes(id)
+            );
+
+            const allCartIngredientsInRequest = itemIngredientIds.every(id =>
+                ingredientIds.includes(id)
+            );
+
+            if (sameLength && allIngredientsMatch && allCartIngredientsInRequest) {
+                exactMatch = item;
+                break;
+            }
+        }
+
+        // Если найден точно такой же элемент, увеличиваем его количество
+        if (exactMatch) {
+            await prisma.cartItem.update({
                 where: {
-                    id: findCartItem.id,
+                    id: exactMatch.id,
                 },
                 data: {
-                    quantity: findCartItem.quantity + data.quantity,
+                    quantity: exactMatch.quantity + (data.quantity || 1),
                 },
             });
-
-            const resp = NextResponse.json(updatedCartItem);
-            resp.cookies.set('cartToken', cartToken);
-            return resp;
         } else {
-            await prisma.cartItem.create({
+            // Создаем новый элемент с ингредиентами
+            const newCartItem = await prisma.cartItem.create({
                 data: {
                     cartId: userCart.id,
                     productItemId: data.productItemId,
-                    quantity: data.quantity,
-                    type: data.type,
+                    quantity: data.quantity || 1,
                     pizzaSize: data.pizzaSize,
-                    ingredients: {connect: data.ingredientsIds?.map((id) => ({id}))},
+                    type: data.type,
                 },
             });
+
+            if (ingredientIds.length > 0) {
+                await prisma.cartItem.update({
+                    where: { id: newCartItem.id },
+                    data: {
+                        ingredients: {
+                            connect: ingredientIds.map(id => ({ id }))
+                        }
+                    }
+                });
+            }
         }
 
-        const totalAmount = await getCartTotalAmount(userCart.id);
-        const updatedCart = await updateCartTotalAmount(userCart.id, totalAmount);
+        // Получаем обновленную корзину со всеми связями
+        const updatedUserCart = await updateCartTotalAmount(token);
 
-        const resp = NextResponse.json(updatedCart);
-        resp.cookies.set('cartToken', cartToken);
+        const resp = NextResponse.json(updatedUserCart);
+        resp.cookies.set('cartToken', token);
         return resp;
     } catch (err) {
-        console.log(err);
+        console.log('Ошибка при добавлении в корзину:', err);
         return NextResponse.json({ message: '[CART_POST] Server error' }, { status: 500 });
     }
 }
@@ -138,65 +169,4 @@ async function findOrCreateCart(cartToken: string | undefined) {
     }
 
     return userCart;
-}
-
-async function getCartTotalAmount(cartId: number): Promise<number> {
-    const userCartAfterUpdate = await prisma.cart.findFirst({
-        where: {
-            id: cartId,
-        },
-        include: {
-            items: {
-                orderBy: {
-                    createdAt: 'desc',
-                },
-                include: {
-                    productItem: {
-                        include: {
-                            product: true,
-                        },
-                    },
-                    ingredients: true,
-                },
-            },
-        },
-        orderBy: {
-            createdAt: 'desc',
-        },
-    });
-
-    const totalAmount = userCartAfterUpdate?.items.reduce(
-        (acc, item) => acc + calcCartItemTotalAmount(item),
-        0,
-    );
-
-    return totalAmount ?? 0;
-}
-
-async function updateCartTotalAmount(cartId: number, totalAmount: number) {
-    const updatedCart = await prisma.cart.update({
-        where: {
-            id: cartId,
-        },
-        data: {
-            totalAmount,
-        },
-        include: {
-            items: {
-                orderBy: {
-                    createdAt: 'desc',
-                },
-                include: {
-                    productItem: {
-                        include: {
-                            product: true,
-                        },
-                    },
-                    ingredients: true,
-                },
-            },
-        },
-    });
-
-    return updatedCart;
 }

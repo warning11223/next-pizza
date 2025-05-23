@@ -8,6 +8,7 @@ import {Container} from "@/components/shared/container";
 import {cn} from "@/lib/utils";
 import {IStory} from "@/services/stories";
 import {useScrollLock} from "@/hooks/useScrollLock";
+import {useWindowSize} from "react-use";
 
 interface Props {
     className?: string;
@@ -17,6 +18,8 @@ export const Stories: React.FC<Props> = ({className}) => {
     const [stories, setStories] = React.useState<IStory[]>([]);
     const [open, setOpen] = React.useState(false);
     const [selectedStory, setSelectedStory] = React.useState<IStory>();
+
+    const { width: windowWidth, height: windowHeight } = useWindowSize();
 
     useScrollLock(open);
 
@@ -28,6 +31,23 @@ export const Stories: React.FC<Props> = ({className}) => {
 
         fetchStories();
     }, []);
+
+    const storyDimensions = React.useMemo(() => {
+        const maxWidth = Math.min(windowWidth - 32, 520);
+        const maxHeight = windowHeight - 80;
+
+        const aspectRatio = 9/16;
+
+        let width = maxWidth;
+        let height = width / aspectRatio;
+
+        if (height > maxHeight) {
+            height = maxHeight;
+            width = height * aspectRatio;
+        }
+
+        return { width, height };
+    }, [windowWidth, windowHeight]);
 
     const onClickStory = (story: IStory) => {
         setSelectedStory(story);
@@ -58,7 +78,7 @@ export const Stories: React.FC<Props> = ({className}) => {
 
                 {open && (
                     <div className="fixed inset-0 w-full h-full bg-black/80 flex items-center justify-center z-30">
-                        <div className="relative" style={{width: 520}}>
+                        <div className="relative">
                             <button className="absolute -right-10 -top-5 z-30" onClick={() => setOpen(false)}>
                                 <X className="absolute top-3 right-0 w-8 h-8 text-white/50"/>
                             </button>
@@ -67,8 +87,8 @@ export const Stories: React.FC<Props> = ({className}) => {
                                 onAllStoriesEnd={() => setOpen(false)}
                                 stories={selectedStory?.items.map((item) => ({url: item.sourceUrl})) || []}
                                 defaultInterval={3000}
-                                width={520}
-                                height={800}
+                                width={storyDimensions.width}
+                                height={storyDimensions.height}
                             />
                         </div>
                     </div>

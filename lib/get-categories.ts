@@ -43,13 +43,14 @@ export const getCategories = async (params: GetSearchParams) => {
                                 in: pizzaTypes,
                             },
                             price: {
-                                gte: minPrice,
-                                lte: maxPrice,
+                                gte: minPrice, // >=
+                                lte: maxPrice, // <=
                             },
                         },
                     },
                 },
                 include: {
+                    ingredients: true,
                     items: {
                         where: {
                             price: {
@@ -64,7 +65,7 @@ export const getCategories = async (params: GetSearchParams) => {
                 },
             },
         },
-    })
+    });
 
     return categories;
 }
