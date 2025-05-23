@@ -5,8 +5,8 @@ import React from 'react';
 import { Button } from '../ui/button';
 import { IProduct } from '@/hooks/useChoosePiza';
 import toast from 'react-hot-toast';
-import {DialogTitle} from "@/components/ui/dialog";
 import {useCart} from "@/hooks/useCart";
+import {Title} from "@/components/shared/title";
 
 interface Props {
     imageUrl: string;
@@ -59,7 +59,7 @@ export const ChooseProductForm: React.FC<Props> = ({
             </div>
 
             <div className="flex flex-col justify-between w-[490px] bg-[#F7F6F5] p-7">
-                <DialogTitle className="font-extrabold mb-1 text-3xl">{name}</DialogTitle>
+                <Title text={name} size="md" className="font-extrabold mb-1" />
 
                 <Button
                     loading={loading}
